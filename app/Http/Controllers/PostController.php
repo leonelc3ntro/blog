@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Post;
+use App\User;
 
 class PostController extends Controller
 {
@@ -72,7 +73,7 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
+    {    	
         $post = Post::find($id);
         return view('posts.edit',compact('post'));
     }
@@ -91,7 +92,6 @@ class PostController extends Controller
             'description' => 'required',
         ]);
 
-        // Post::find($id)->update($request->all());
 		$request->user()->posts()->update([
     		'title' => $request->title,
     		'description' => $request->description,    		
