@@ -3,10 +3,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Post;
-use App\User;
+use App\Role;
 
-class PostController extends Controller
+class RoleController extends Controller
 {
 
     /**
@@ -16,9 +15,8 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        // $posts = Post::orderBy('id','DESC')->paginate(5);
-        $posts = $request->user()->posts()->orderBy('id','DESC')->paginate(5);
-        return view('posts.index',compact('posts'))            
+        $roles = Role::orderBy('id','DESC')->paginate(5);
+        return view('roles.index',compact('roles'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
@@ -29,7 +27,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('posts.create');
+        return view('roles.create');
     }
 
     /**
@@ -40,19 +38,14 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-    	
         $this->validate($request, [
             'title' => 'required',
             'description' => 'required',
         ]);
 
-    	$request->user()->posts()->create([
-    		'title' => $request->title,
-    		'description' => $request->description,    		
-    		]);
-        
-        return redirect()->route('posts.index')                        
-                        ->with('success','Post created successfully');
+        Role::create($request->all());
+        return redirect()->route('roles.index')
+                        ->with('success','Role created successfully');
     }
 
     /**
@@ -63,8 +56,8 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        $post = Post::find($id);
-        return view('posts.show',compact('post'));
+        $role = Role::find($id);
+        return view('roles.show',compact('role'));
     }
 
     /**
@@ -74,9 +67,9 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {    	
-        $post = Post::find($id);
-        return view('posts.edit',compact('post'));
+    {
+        $role = Role::find($id);
+        return view('roles.edit',compact('role'));
     }
 
     /**
@@ -93,14 +86,9 @@ class PostController extends Controller
             'description' => 'required',
         ]);
 
-		$request->user()->posts()->update([
-    		'title' => $request->title,
-    		'description' => $request->description,    		
-    		]);
-
-
-        return redirect()->route('posts.index')
-                        ->with('success','Post updated successfully');
+        Role::find($id)->update($request->all());
+        return redirect()->route('roles.index')
+                        ->with('success','Role updated successfully');
     }
 
     /**
@@ -111,8 +99,8 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        Post::find($id)->delete();
-        return redirect()->route('posts.index')
-                        ->with('success','Post deleted successfully');
+        Role::find($id)->delete();
+        return redirect()->route('roles.index')
+                        ->with('success','Role deleted successfully');
     }
 }

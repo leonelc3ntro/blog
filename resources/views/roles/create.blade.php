@@ -1,14 +1,14 @@
 @extends('layouts.default')
- 
+
 @section('content')
 
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Edit Post</h2>
+                <h2>Create New Role</h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('posts.index') }}"> Back</a>
+                <a class="btn btn-primary" href="{{ route('roles.index') }}"> Back</a>
             </div>
         </div>
     </div>
@@ -24,8 +24,8 @@
         </div>
     @endif
 
-    {!! Form::model($post, ['method' => 'PATCH','route' => ['posts.update', $post->id]]) !!}
-        @include('posts.fields')
+    {!! Form::open(array('route' => 'roles.store','method'=>'POST')) !!}
+        @include('roles.fields')
     {!! Form::close() !!}
 
 @endsection
