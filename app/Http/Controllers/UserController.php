@@ -23,6 +23,10 @@ class UserController extends Controller
                  ->orderBy('users.id','DESC')
                  ->select('*')
                  ->paginate(5);
+
+        if (count($users) == 0) {
+            $users = User::orderBy('id','DESC')->paginate(5);
+        }
                  
         return view('users.index',compact('users'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
