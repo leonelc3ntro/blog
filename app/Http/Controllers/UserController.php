@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
+use App\Role;
 
 class UserController extends Controller
 {
@@ -27,7 +28,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        $roles = Role::pluck('name','id');
+        return view('users.create')->with('roles', $roles);
     }
 
     /**
@@ -39,11 +41,22 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'title' => 'required',
-            'description' => 'required',
+            'name' => 'required',
+            'email' => 'required',
+            'password' => 'required|min:6',
+            'password_confirm' => 'required|min:6|same:password',
         ]);
 
-        User::create($request->all());
+        $role = Role::find($request->input('role'));
+
+        $user = User::create([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
+        ]);
+
+        $user->attachRole($role);
+        
         return redirect()->route('users.index')
                         ->with('success','User created successfully');
     }
@@ -69,7 +82,16 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        return view('users.edit',compact('user'));
+        $roles = Role::pluck('name','id');        
+        $role = User::find($id)->roles(); 
+
+        
+        foreach( $user->roles as $role )
+        {
+            $selected = $role->id;
+        }
+        
+        return view('users.edit',compact('user'))->with('roles', $roles)->with('selected', $selected);
     }
 
     /**
@@ -82,11 +104,32 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'title' => 'required',
-            'description' => 'required',
+            'name' => 'required',
+            'email' => 'required',
         ]);
 
-        User::find($id)->update($request->all());
+        $role = Role::find($request->input('role')); dd($role);
+        $user = User::find($id);
+
+        if (empty($request->input('password'))) {     
+
+            User::find($id)->update([
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),                
+            ]);
+
+        } else {
+
+            User::find($id)->update([
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'password' => bcrypt($request->input('password')),
+            ]);
+
+        }
+
+        $user->attachRole($role);
+
         return redirect()->route('users.index')
                         ->with('success','User updated successfully');
     }
