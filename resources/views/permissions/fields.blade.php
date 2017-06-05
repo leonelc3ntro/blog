@@ -21,6 +21,8 @@
             </div>
         </div>        
 
+        {{ Form::hidden('role_id', $idRole, array('id' => 'role_id')) }}        
+
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
                 <button type="submit" class="btn btn-primary">Save</button>
         </div>

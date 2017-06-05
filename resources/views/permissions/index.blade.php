@@ -8,7 +8,7 @@
                 <h2>Permissions</h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('users.create') }}"> Create New Permission</a>
+                <a class="btn btn-success" href="{{ route('permissions.create', ['idRole' => $idRole ]) }}"> Create New Permission</a>
             </div>
         </div>
     </div>

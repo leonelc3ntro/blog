@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Permission;
+use App\Role;
 
 class PermissionController extends Controller
 {
@@ -14,10 +15,11 @@ class PermissionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {        
-        $permissions = Permission::orderBy('id','DESC')->paginate(5);
+    {       
+        $idRole = $request->idRole; 
+        $permissions = Permission::where('id','=',$idRole)->orderBy('id','DESC')->paginate(5);
         return view('permissions.index',compact('permissions'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
+            ->with('i', ($request->input('page', 1) - 1) * 5)->with('idRole', $idRole);
     }
 
     /**
@@ -25,9 +27,10 @@ class PermissionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('permissions.create');
+        $idRole = $request->idRole;
+        return view('permissions.create')->with('idRole', $idRole);
     }
 
     /**
@@ -39,11 +42,21 @@ class PermissionController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'title' => 'required',
-            'description' => 'required',
+            'name' => 'required',
+            'display_name' => 'required',            
         ]);
 
-        Permission::create($request->all());
+        $idRole = Role::find($request->role_id);
+
+        // Permission::create($request->all());
+        $permission = Permission::create([
+            'name' => $request->name,
+            'display_name' => $request->display_name,
+            'description' => $request->description,
+        ]);
+
+        $idRole->attachPermission($permission);
+
         return redirect()->route('permissions.index')
                         ->with('success','Permission created successfully');
     }
