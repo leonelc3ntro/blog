@@ -3,9 +3,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Role;
+use App\Permission;
 
-class RoleController extends Controller
+class PermissionController extends Controller
 {
 
     /**
@@ -14,9 +14,9 @@ class RoleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {   
-        $roles = Role::orderBy('id','DESC')->paginate(5);
-        return view('roles.index',compact('roles'))
+    {        
+        $permissions = Permission::orderBy('id','DESC')->paginate(5);
+        return view('permissions.index',compact('permissions'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
@@ -27,7 +27,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        return view('roles.create');
+        return view('permissions.create');
     }
 
     /**
@@ -43,9 +43,9 @@ class RoleController extends Controller
             'description' => 'required',
         ]);
 
-        Role::create($request->all());
-        return redirect()->route('roles.index')
-                        ->with('success','Role created successfully');
+        Permission::create($request->all());
+        return redirect()->route('permissions.index')
+                        ->with('success','Permission created successfully');
     }
 
     /**
@@ -56,8 +56,8 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        $role = Role::find($id);
-        return view('roles.show',compact('role'));
+        $permission = Permission::find($id);
+        return view('permissions.show',compact('permission'));
     }
 
     /**
@@ -68,8 +68,8 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        $role = Role::find($id);
-        return view('roles.edit',compact('role'));
+        $permission = Permission::find($id);
+        return view('permissions.edit',compact('permission'));
     }
 
     /**
@@ -86,9 +86,9 @@ class RoleController extends Controller
             'description' => 'required',
         ]);
 
-        Role::find($id)->update($request->all());
-        return redirect()->route('roles.index')
-                        ->with('success','Role updated successfully');
+        Permission::find($id)->update($request->all());
+        return redirect()->route('permissions.index')
+                        ->with('success','Permission updated successfully');
     }
 
     /**
@@ -99,8 +99,8 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        Role::find($id)->delete();
-        return redirect()->route('roles.index')
-                        ->with('success','Role deleted successfully');
+        Permission::find($id)->delete();
+        return redirect()->route('permissions.index')
+                        ->with('success','Permission deleted successfully');
     }
 }

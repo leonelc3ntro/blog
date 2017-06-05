@@ -12,4 +12,9 @@ class Role extends EntrustRole
 	{
 		return $this->belongsTo('App\User');
 	}
+
+	public function permissions()
+	{
+		$this->hasMany('App\Permission');
+	}
 }
