@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use DB;
 use App\User;
 use App\Role;
 
@@ -16,7 +17,13 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::orderBy('id','DESC')->paginate(5);
+        $users = DB::table('users')
+                 ->join('role_user', 'role_user.user_id','=','users.id')
+                 ->join('roles', 'roles.id','=','role_user.role_id')
+                 ->orderBy('users.id','DESC')
+                 ->select('*')
+                 ->paginate(5);
+                 
         return view('users.index',compact('users'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
