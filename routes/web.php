@@ -24,3 +24,8 @@ Route::resource('posts', 'PostController');
 Route::resource('roles', 'RoleController');
 Route::resource('users', 'UserController');
 Route::resource('permissions', 'PermissionController');
+
+Route::get('permissions/{idRole}', [
+			'uses' => 'PermissionController@index',
+			'as' => 'permissions'
+			]);

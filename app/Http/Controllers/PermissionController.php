@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Permission;
 use App\Role;
+use DB;
 
 class PermissionController extends Controller
 {
@@ -15,9 +16,16 @@ class PermissionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {       
-        $idRole = $request->idRole; 
-        $permissions = Permission::where('id','=',$idRole)->orderBy('id','DESC')->paginate(5);
+    {           
+        
+        $idRole = $request->idRole;
+
+        $permissions = DB::table('permission_role')
+                            ->join('roles','roles.id','=','permission_role.role_id')
+                            ->join('permissions','permissions.id','=','permission_role.permission_id')
+                            ->where('role_id','=',$idRole)
+                            ->orderBy('role_id','DESC')
+                            ->paginate(5);
         return view('permissions.index',compact('permissions'))
             ->with('i', ($request->input('page', 1) - 1) * 5)->with('idRole', $idRole);
     }
@@ -57,7 +65,7 @@ class PermissionController extends Controller
 
         $idRole->attachPermission($permission);
 
-        return redirect()->route('permissions.index')
+        return redirect()->route('permissions.index',['idRole' => $idRole])
                         ->with('success','Permission created successfully');
     }
 
@@ -79,10 +87,12 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
+    public function edit(Request $request, $id)
+    {        
+        $idRole = $request->idRole;
         $permission = Permission::find($id);
-        return view('permissions.edit',compact('permission'));
+        return view('permissions.edit',compact('permission'))
+                    ->with('idRole', $idRole);
     }
 
     /**

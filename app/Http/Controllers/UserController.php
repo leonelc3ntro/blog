@@ -17,6 +17,8 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        dd($request);
+
         $users = DB::table('users')
                  ->join('role_user', 'role_user.user_id','=','users.id')
                  ->join('roles', 'roles.id','=','role_user.role_id')
@@ -95,8 +97,9 @@ class UserController extends Controller
         $user = User::find($id);
         $roles = Role::pluck('name','id');        
         $role = User::find($id)->roles(); 
+        $selected = '';
 
-        
+
         foreach( $user->roles as $role )
         {
             $selected = $role->id;
@@ -119,7 +122,7 @@ class UserController extends Controller
             'email' => 'required',
         ]);
 
-        $role = Role::find($request->input('role')); dd($role);
+        $role = Role::find($request->input('role'));
         $user = User::find($id);
 
         if (empty($request->input('password'))) {     
