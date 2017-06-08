@@ -17,8 +17,6 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        dd($request);
-
         $users = DB::table('users')
                  ->join('role_user', 'role_user.user_id','=','users.id')
                  ->join('roles', 'roles.id','=','role_user.role_id')
@@ -42,7 +40,11 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::pluck('name','id');
-        return view('users.create')->with('roles', $roles);
+        $selected = '';
+        
+        return view('users.create')
+                ->with('roles', $roles)
+                ->with('selected', $selected);
     }
 
     /**
@@ -105,7 +107,9 @@ class UserController extends Controller
             $selected = $role->id;
         }
         
-        return view('users.edit',compact('user'))->with('roles', $roles)->with('selected', $selected);
+        return view('users.edit',compact('user'))
+                ->with('roles', $roles)
+                ->with('selected', $selected);
     }
 
     /**

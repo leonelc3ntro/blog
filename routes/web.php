@@ -25,7 +25,13 @@ Route::resource('roles', 'RoleController');
 Route::resource('users', 'UserController');
 Route::resource('permissions', 'PermissionController');
 
-Route::get('permissions/{idRole}', [
-			'uses' => 'PermissionController@index',
-			'as' => 'permissions'
-			]);
+// Route::get('permissions/{idRole}', function ($idRole)
+// {
+// 	return redirect()
+// 			->action('PermissionController@index', ['idRole', $idRole]);
+// });
+
+// Route::get('permissions/{idRole}', [
+// 			'uses' => 'PermissionController@index',
+// 			'as' => 'permissions'
+// 			]);

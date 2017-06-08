@@ -20,9 +20,24 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">                        
                         @if (!Auth::guest())
+
+                        
+
                         <li><a href="{{ url('posts') }}">Posts</a></li>
+
+                        
+                        @ability('admin, user', 'users')
                         <li><a href="{{ url('roles') }}">Roles</a></li>
+                        @endability
+                        
+
+                        @ability('admin', 'users')
                         <li><a href="{{ url('users') }}">Users</a></li>
+                        @endability
+
+
+                        
+
                         @endif
                     </ul>
 
