@@ -30,6 +30,7 @@
                         <li><a href="{{ url('roles') }}">Roles</a></li>
                         @endability
                         
+                        <li><a href="{{ url('estados') }}">Estados</a></li>
 
                         @ability('admin', 'users')
                         <li><a href="{{ url('users') }}">Users</a></li>

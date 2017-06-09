@@ -24,6 +24,7 @@ Route::resource('posts', 'PostController');
 Route::resource('roles', 'RoleController');
 Route::resource('users', 'UserController');
 Route::resource('permissions', 'PermissionController');
+Route::resource('estados', 'EstadoController');
 
 // Route::get('permissions/{idRole}', function ($idRole)
 // {
